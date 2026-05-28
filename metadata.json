@@ -1,0 +1,6 @@
+{
+  "name": "Automação Logística de XML NF-e",
+  "description": "Sistema web local de alto desempenho de automação, validação e download em lote (ZIP) de arquivos XML de NF-e integrado com leitor de código de barras para transporte de cargas escolares.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
