@@ -1,6 +1,5 @@
 import express from "express";
 import path from "path";
-import { createServer as createViteServer } from "vite";
 
 const UF_MAP: Record<string, { sigla: string; nome: string }> = {
   "11": { sigla: "RO", nome: "Rondônia" },
@@ -455,6 +454,7 @@ app.post("/api/download-single", async (req, res) => {
 async function initLocalServer() {
   // Vite middleware integrado para lidar com o frontend em Single-Page Application (SPA)
   if (process.env.NODE_ENV !== "production") {
+    const { createServer: createViteServer } = await import("vite");
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: "spa"
