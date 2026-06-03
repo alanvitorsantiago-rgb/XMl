@@ -1,34 +1,34 @@
 import express from "express";
 import path from "path";
 
-const UF_MAP: Record<string, { sigla: string; nome: string }> = {
-  "11": { sigla: "RO", nome: "Rondônia" },
-  "12": { sigla: "AC", nome: "Acre" },
-  "13": { sigla: "AM", nome: "Amazonas" },
-  "14": { sigla: "RR", nome: "Roraima" },
-  "15": { sigla: "PA", nome: "Pará" },
-  "16": { sigla: "AP", nome: "Amapá" },
-  "17": { sigla: "TO", nome: "Tocantins" },
-  "21": { sigla: "MA", nome: "Maranhão" },
-  "22": { sigla: "PI", nome: "Piauí" },
-  "23": { sigla: "CE", nome: "Ceará" },
-  "24": { sigla: "RN", nome: "Rio Grande do Norte" },
-  "25": { sigla: "PB", nome: "Paraíba" },
-  "26": { sigla: "PE", nome: "Pernambuco" },
-  "27": { sigla: "AL", nome: "Alagoas" },
-  "28": { sigla: "SE", nome: "Sergipe" },
-  "29": { sigla: "BA", nome: "Bahia" },
-  "31": { sigla: "MG", nome: "Minas Gerais" },
-  "32": { sigla: "ES", nome: "Espírito Santo" },
-  "33": { sigla: "RJ", nome: "Rio de Janeiro" },
-  "35": { sigla: "SP", nome: "São Paulo" },
-  "41": { sigla: "PR", nome: "Paraná" },
-  "42": { sigla: "SC", nome: "Santa Catarina" },
-  "43": { sigla: "RS", nome: "Rio Grande do Sul" },
-  "50": { sigla: "MS", nome: "Mato Grosso do Sul" },
-  "51": { sigla: "MT", nome: "Mato Grosso" },
-  "52": { sigla: "GO", nome: "Goiás" },
-  "53": { sigla: "DF", nome: "Distrito Federal" }
+const UF_MAP: Record<string, { sigla: string; nome: string; cMun: string; xMun: string }> = {
+  "11": { sigla: "RO", nome: "Rondônia", cMun: "1100205", xMun: "Porto Velho" },
+  "12": { sigla: "AC", nome: "Acre", cMun: "1200401", xMun: "Rio Branco" },
+  "13": { sigla: "AM", nome: "Amazonas", cMun: "1302603", xMun: "Manaus" },
+  "14": { sigla: "RR", nome: "Roraima", cMun: "1400100", xMun: "Boa Vista" },
+  "15": { sigla: "PA", nome: "Pará", cMun: "1501402", xMun: "Belém" },
+  "16": { sigla: "AP", nome: "Amapá", cMun: "1600303", xMun: "Macapá" },
+  "17": { sigla: "TO", nome: "Tocantins", cMun: "1721000", xMun: "Palmas" },
+  "21": { sigla: "MA", nome: "Maranhão", cMun: "2111300", xMun: "São Luís" },
+  "22": { sigla: "PI", nome: "Piauí", cMun: "2211001", xMun: "Teresina" },
+  "23": { sigla: "CE", nome: "Ceará", cMun: "2304400", xMun: "Fortaleza" },
+  "24": { sigla: "RN", nome: "Rio Grande do Norte", cMun: "2408102", xMun: "Natal" },
+  "25": { sigla: "PB", nome: "Paraíba", cMun: "2507507", xMun: "João Pessoa" },
+  "26": { sigla: "PE", nome: "Pernambuco", cMun: "2611606", xMun: "Recife" },
+  "27": { sigla: "AL", nome: "Alagoas", cMun: "2704302", xMun: "Maceió" },
+  "28": { sigla: "SE", nome: "Sergipe", cMun: "2800308", xMun: "Aracaju" },
+  "29": { sigla: "BA", nome: "Bahia", cMun: "2927408", xMun: "Salvador" },
+  "31": { sigla: "MG", nome: "Minas Gerais", cMun: "3106200", xMun: "Belo Horizonte" },
+  "32": { sigla: "ES", nome: "Espírito Santo", cMun: "3205309", xMun: "Vitória" },
+  "33": { sigla: "RJ", nome: "Rio de Janeiro", cMun: "3304557", xMun: "Rio de Janeiro" },
+  "35": { sigla: "SP", nome: "São Paulo", cMun: "3550308", xMun: "São Paulo" },
+  "41": { sigla: "PR", nome: "Paraná", cMun: "4106902", xMun: "Curitiba" },
+  "42": { sigla: "SC", nome: "Santa Catarina", cMun: "4205407", xMun: "Florianópolis" },
+  "43": { sigla: "RS", nome: "Rio Grande do Sul", cMun: "4314902", xMun: "Porto Alegre" },
+  "50": { sigla: "MS", nome: "Mato Grosso do Sul", cMun: "5002704", xMun: "Campo Grande" },
+  "51": { sigla: "MT", nome: "Mato Grosso", cMun: "5103403", xMun: "Cuiabá" },
+  "52": { sigla: "GO", nome: "Goiás", cMun: "5208707", xMun: "Goiânia" },
+  "53": { sigla: "DF", nome: "Distrito Federal", cMun: "5300108", xMun: "Brasília" }
 };
 
 // Gera um XML XML de NF-e estruturado e realista para simulação fiscal de homologação
@@ -47,7 +47,7 @@ function generateSimulatedNFeXML(key: string): string {
   const cNF = key.substring(35, 43);
   const cDV = key.substring(43, 44);
 
-  const ufData = UF_MAP[ufCode] || { sigla: "SP", nome: "São Paulo" };
+  const ufData = UF_MAP[ufCode] || { sigla: "SP", nome: "São Paulo", cMun: "3550308", xMun: "São Paulo" };
   const ano = "20" + aaMm.substring(0, 2);
   const mes = aaMm.substring(2, 4);
 
@@ -78,7 +78,7 @@ function generateSimulatedNFeXML(key: string): string {
         <dhEmi>${ano}-${mes}-15T14:30:00-03:00</dhEmi>
         <tpNF>1</tpNF>
         <idDest>1</idDest>
-        <cMunFG>${ufCode}00604</cMunFG>
+        <cMunFG>${ufData.cMun}</cMunFG>
         <tpImp>1</tpImp>
         <tpEmis>${tpEmis}</tpEmis>
         <cDV>${cDV}</cDV>
@@ -97,8 +97,8 @@ function generateSimulatedNFeXML(key: string): string {
           <xlgr>AVENIDA INDUSTRIAL DA AMBICAO</xlgr>
           <n>1500</n>
           <xBairro>VILA INDUSTRIAL</xBairro>
-          <cMun>${ufCode}00604</cMun>
-          <xMun>CENTRAL DA DISTRIBUICAO</xMun>
+          <cMun>${ufData.cMun}</cMun>
+          <xMun>${ufData.xMun}</xMun>
           <UF>${ufData.sigla}</UF>
           <CEP>04015010</CEP>
           <cPais>1058</cPais>
@@ -115,8 +115,8 @@ function generateSimulatedNFeXML(key: string): string {
           <xlgr>PRACA DO MUNICIPIO CENTRAL</xlgr>
           <n>100</n>
           <xBairro>CENTRO</xBairro>
-          <cMun>${ufCode}00508</cMun>
-          <xMun>CIDADE DE DESTINO</xMun>
+          <cMun>${ufData.cMun}</cMun>
+          <xMun>${ufData.xMun}</xMun>
           <UF>${ufData.sigla}</UF>
           <CEP>13010000</CEP>
           <cPais>1058</cPais>
@@ -251,7 +251,7 @@ function generateSimulatedNFeXML(key: string): string {
           <xNome>RAPIDO ESCOLAR E DISTRIBUICAO LOGISTICA S/A</xNome>
           <IE>999888777666</IE>
           <xEnder>RUA DAS CARRETAS, 450</xEnder>
-          <xMun>TRANSPORTLANDIA</xMun>
+          <xMun>${ufData.xMun}</xMun>
           <UF>${ufData.sigla}</UF>
         </transporta>
         <vol>
